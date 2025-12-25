@@ -3,128 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎄 韩老魔の专属圣诞惊喜 🎄</title>
+    <title>🎄 韩老魔的祝福</title>
     <style>
+        /* 使用黑色背景，增加冬日氛围 */
         body {
-            background: #000;
-            color: #0f0;
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
+            background-color: #050505;
+            color: #10ff10;
+            font-family: "Courier New", Courier, monospace; /* 必须使用等宽字体 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             height: 100vh;
             margin: 0;
-            display: flex;
-            flex-direction: column; /* 让内容垂直排列 */
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
+            overflow: hidden;
         }
-        #tree-container {
-            flex-grow: 1; /* 让树占据更多空间 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-top: 20px; /* 顶部留白 */
-        }
-        #tree {
-            white-space: pre;
-            line-height: 1.1;
-            font-size: clamp(10px, 4vw, 18px); /* 响应式字体大小 */
-            text-shadow: 0 0 5px rgba(0,255,0,0.5);
-        }
-        .star { color: #ff0; text-shadow: 0 0 15px #ff0, 0 0 5px orange; } /* 顶部星星 */
-        .light-red { color: #f00; text-shadow: 0 0 8px #f00; } /* 红色彩灯 */
-        .light-blue { color: #00f; text-shadow: 0 0 8px #00f; } /* 蓝色彩灯 */
-        .light-yellow { color: #ff0; text-shadow: 0 0 8px #ff0; } /* 黄色彩灯 */
-        .snow { color: #fff; text-shadow: 0 0 3px #fff; } /* 雪花 */
 
-        #message-box {
-            position: relative; /* 改为relative，与树一起滚动 */
-            padding: 15px;
-            margin-bottom: 20px; /* 底部留白 */
-            color: #fff;
-            text-shadow: 0 0 10px #f00, 0 0 5px #fff;
-            font-size: clamp(14px, 4.5vw, 22px);
-            max-width: 90%;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-sizing: border-box;
-            line-height: 1.5;
+        /* 核心：确保每一行字符都严格居中且等宽 */
+        #tree-wrapper {
+            text-align: center;
+            line-height: 1.2;
+            font-size: 16px;
+            font-weight: bold;
+            white-space: pre; /* 保留空格 */
+            cursor: default;
+            user-select: none;
         }
-        #message-box p {
-            margin: 5px 0;
+
+        .star { color: #fff700; text-shadow: 0 0 10px #fff700; }
+        .light { animation: blink 0.8s infinite; }
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+
+        /* 祝福语区域样式 */
+        #message-area {
+            margin-top: 30px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #greeting {
+            color: #ffffff;
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px #ff0000;
+            min-height: 1.5em;
         }
         #signature {
-            font-size: clamp(12px, 3.5vw, 18px);
+            color: #888;
+            font-size: 0.9rem;
             margin-top: 10px;
-            color: #ccc;
+        }
+        
+        /* 增加飘雪花背景 */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            z-index: -1;
+            animation: fall linear;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh); }
         }
     </style>
 </head>
 <body>
-    <div id="tree-container">
-        <div id="tree"></div>
-    </div>
-    <div id="message-box">
-        <p id="greeting"></p>
-        <p id="signature">来自韩老魔的祝福</p>
+
+    <div id="tree-wrapper"></div>
+
+    <div id="message-area">
+        <div id="greeting"></div>
+        <div id="signature">—— 来自韩老魔的祝福 ——</div>
     </div>
 
     <script>
-        const greetings = [
-            "愿你的圣诞充满温馨与欢乐，每一天都闪耀光芒！",
-            "圣诞的钟声敲响，愿幸福与你常伴！",
-            "冬日送暖，圣诞送福，愿你一切安好！",
-            "雪花飘落，带来圣诞的祝福与甜蜜！",
-            "圣诞快乐！愿你所有的愿望都能实现！",
-            "愿这美好的季节为你带来无尽的喜悦和宁静！",
-            "点亮圣诞树，点亮希望，愿你平安喜乐！",
-            "祝你拥有一个闪闪发光的圣诞节和美好的新年！",
-            "把所有的祝福都装进圣诞袜，送给你！",
-            "愿你感受到爱与被爱，圣诞快乐！",
-            "圣诞老人说，他把最好的礼物送给了你——我的祝福！",
-            "在这个充满魔力的夜晚，愿你拥有最美好的回忆！"
+        const treeContainer = document.getElementById('tree-wrapper');
+        const greetingDisplay = document.getElementById('greeting');
+        
+        const wishes = [
+            "愿你的圣诞充满温馨与奇迹！",
+            "平安夜，愿你一生平安喜乐！",
+            "愿寒冷的冬日里，你总有温暖相随。",
+            "圣诞快乐！所有的好运都奔向你。",
+            "愿你明朗大胆，永远热泪盈眶。",
+            "祝你拥有一个发光的圣诞节！"
         ];
 
-        function getRandomGreeting() {
-            const index = Math.floor(Math.random() * greetings.length);
-            return greetings[index];
-        }
+        // 生成圣诞树逻辑
+        function buildTree() {
+            const height = 16;
+            let treeHTML = "";
 
-        const treeHeight = 18; // 调整树的高度
-        const treeBaseWidth = 2 * treeHeight - 1; // 树底部的宽度
+            // 1. 顶部的星星
+            treeHTML += '<span class="star">★</span>\n';
 
-        function drawTree() {
-            let treeStr = '<span class="star">' + ' '.repeat(treeHeight - 1) + '★</span>\n'; // 顶部星星居中
-
-            for (let i = 1; i < treeHeight; i++) {
-                let line = " ".repeat(treeHeight - i); // 左侧空格
-                for (let j = 0; j < (2 * i - 1); j++) {
-                    const r = Math.random();
-                    if (r < 0.05) line += '<span class="snow">*</span>'; // 雪花
-                    else if (r < 0.15) line += '<span class="light-red">●</span>'; // 红色彩灯
-                    else if (r < 0.25) line += '<span class="light-blue">◆</span>'; // 蓝色彩灯
-                    else if (r < 0.35) line += '<span class="light-yellow">▲</span>'; // 黄色彩灯
-                    else line += "*"; // 树叶
+            // 2. 树体层
+            for (let i = 1; i <= height; i++) {
+                let row = "";
+                // 计算每一行应该有的星号数量 (1, 3, 5, 7...)
+                let starsCount = 2 * i - 1;
+                
+                for (let j = 0; j < starsCount; j++) {
+                    let rand = Math.random();
+                    if (rand > 0.9) {
+                        row += '<span class="light" style="color:red">o</span>';
+                    } else if (rand > 0.8) {
+                        row += '<span class="light" style="color:cyan">i</span>';
+                    } else if (rand > 0.7) {
+                        row += '<span class="light" style="color:orange">@</span>';
+                    } else {
+                        row += "*";
+                    }
                 }
-                treeStr += line + "\n";
+                treeHTML += row + "\n";
             }
 
-            // 树干
-            const trunkWidth = 3;
-            const trunkOffset = Math.floor((treeBaseWidth - trunkWidth) / 2);
-            for (let i = 0; i < 3; i++) { // 3层树干
-                treeStr += " ".repeat(trunkOffset) + "|||\n";
-            }
-            document.getElementById('tree').innerHTML = treeStr;
+            // 3. 树根 (确保绝对居中)
+            // 树根宽度固定为3个字符，无论树多大，它都应该在中心
+            const trunk = "MMMMM";
+            treeHTML += trunk + "\n";
+            treeHTML += trunk + "\n";
+
+            treeContainer.innerHTML = treeHTML;
         }
 
-        document.getElementById('greeting').innerText = getRandomGreeting(); // 初始加载随机祝福语
+        // 随机祝福语
+        function showRandomWish() {
+            greetingDisplay.innerText = wishes[Math.floor(Math.random() * wishes.length)];
+        }
 
-        // 让树和彩灯闪烁
-        setInterval(drawTree, 500);
-        drawTree(); // 初始绘制一次
+        // 简单的雪花效果
+        function createSnow() {
+            const snow = document.createElement('div');
+            snow.innerHTML = "❄";
+            snow.className = "snowflake";
+            snow.style.left = Math.random() * 100 + "vw";
+            snow.style.animationDuration = Math.random() * 3 + 2 + "s";
+            snow.style.opacity = Math.random();
+            document.body.appendChild(snow);
+            setTimeout(() => snow.remove(), 5000);
+        }
+
+        // 初始化
+        setInterval(buildTree, 600); // 闪烁效果
+        setInterval(createSnow, 200); // 下雪效果
+        showRandomWish();
+        buildTree();
     </script>
 </body>
 </html>
