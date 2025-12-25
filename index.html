@@ -2,48 +2,129 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>来自韩老魔的圣诞祝福>来自>lai'
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎄 韩老魔の专属圣诞惊喜 🎄</title>
     <style>
-        body { background-color: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        #tree { white-space: pre; line-height: 1.2; text-shadow: 0 0 5px #0f0; }
-        .star { color: #ff0; text-shadow: 0 0 10px #ff0; }
-        .ornament { color: #f00; }
-        h1 { font-size: 1.5rem; margin-top: 20px; color: #fff; text-shadow: 0 0 10px #f00; }
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column; /* 让内容垂直排列 */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        #tree-container {
+            flex-grow: 1; /* 让树占据更多空间 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px; /* 顶部留白 */
+        }
+        #tree {
+            white-space: pre;
+            line-height: 1.1;
+            font-size: clamp(10px, 4vw, 18px); /* 响应式字体大小 */
+            text-shadow: 0 0 5px rgba(0,255,0,0.5);
+        }
+        .star { color: #ff0; text-shadow: 0 0 15px #ff0, 0 0 5px orange; } /* 顶部星星 */
+        .light-red { color: #f00; text-shadow: 0 0 8px #f00; } /* 红色彩灯 */
+        .light-blue { color: #00f; text-shadow: 0 0 8px #00f; } /* 蓝色彩灯 */
+        .light-yellow { color: #ff0; text-shadow: 0 0 8px #ff0; } /* 黄色彩灯 */
+        .snow { color: #fff; text-shadow: 0 0 3px #fff; } /* 雪花 */
+
+        #message-box {
+            position: relative; /* 改为relative，与树一起滚动 */
+            padding: 15px;
+            margin-bottom: 20px; /* 底部留白 */
+            color: #fff;
+            text-shadow: 0 0 10px #f00, 0 0 5px #fff;
+            font-size: clamp(14px, 4.5vw, 22px);
+            max-width: 90%;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-sizing: border-box;
+            line-height: 1.5;
+        }
+        #message-box p {
+            margin: 5px 0;
+        }
+        #signature {
+            font-size: clamp(12px, 3.5vw, 18px);
+            margin-top: 10px;
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
-    <div id="tree"></div>
-    <h1>Merry Christmas!</h1>
+    <div id="tree-container">
+        <div id="tree"></div>
+    </div>
+    <div id="message-box">
+        <p id="greeting"></p>
+        <p id="signature">来自韩老魔的祝福</p>
+    </div>
 
     <script>
-        function createTree() {
-            const height = 15;
-            let treeStr = '<span class="star">★</span>\n';
-            for (let i = 1; i < height; i++) {
-                let line = "";
-                for (let j = 0; j < height - i; j++) line += " ";
-                for (let k = 0; k < (2 * i - 1); k++) {
-                    if (Math.random() > 0.9) {
-                        line += '<span class="ornament">o</span>';
-                    } else {
-                        line += "*";
-                    }
+        const greetings = [
+            "愿你的圣诞充满温馨与欢乐，每一天都闪耀光芒！",
+            "圣诞的钟声敲响，愿幸福与你常伴！",
+            "冬日送暖，圣诞送福，愿你一切安好！",
+            "雪花飘落，带来圣诞的祝福与甜蜜！",
+            "圣诞快乐！愿你所有的愿望都能实现！",
+            "愿这美好的季节为你带来无尽的喜悦和宁静！",
+            "点亮圣诞树，点亮希望，愿你平安喜乐！",
+            "祝你拥有一个闪闪发光的圣诞节和美好的新年！",
+            "把所有的祝福都装进圣诞袜，送给你！",
+            "愿你感受到爱与被爱，圣诞快乐！",
+            "圣诞老人说，他把最好的礼物送给了你——我的祝福！",
+            "在这个充满魔力的夜晚，愿你拥有最美好的回忆！"
+        ];
+
+        function getRandomGreeting() {
+            const index = Math.floor(Math.random() * greetings.length);
+            return greetings[index];
+        }
+
+        const treeHeight = 18; // 调整树的高度
+        const treeBaseWidth = 2 * treeHeight - 1; // 树底部的宽度
+
+        function drawTree() {
+            let treeStr = '<span class="star">' + ' '.repeat(treeHeight - 1) + '★</span>\n'; // 顶部星星居中
+
+            for (let i = 1; i < treeHeight; i++) {
+                let line = " ".repeat(treeHeight - i); // 左侧空格
+                for (let j = 0; j < (2 * i - 1); j++) {
+                    const r = Math.random();
+                    if (r < 0.05) line += '<span class="snow">*</span>'; // 雪花
+                    else if (r < 0.15) line += '<span class="light-red">●</span>'; // 红色彩灯
+                    else if (r < 0.25) line += '<span class="light-blue">◆</span>'; // 蓝色彩灯
+                    else if (r < 0.35) line += '<span class="light-yellow">▲</span>'; // 黄色彩灯
+                    else line += "*"; // 树叶
                 }
                 treeStr += line + "\n";
             }
+
             // 树干
-            for (let i = 0; i < 2; i++) {
-                let trunk = "";
-                for (let j = 0; j < height - 2; j++) trunk += " ";
-                treeStr += "|||\n";
+            const trunkWidth = 3;
+            const trunkOffset = Math.floor((treeBaseWidth - trunkWidth) / 2);
+            for (let i = 0; i < 3; i++) { // 3层树干
+                treeStr += " ".repeat(trunkOffset) + "|||\n";
             }
             document.getElementById('tree').innerHTML = treeStr;
         }
 
-        // 动态闪烁效果
-        setInterval(createTree, 500);
-        createTree();
+        document.getElementById('greeting').innerText = getRandomGreeting(); // 初始加载随机祝福语
+
+        // 让树和彩灯闪烁
+        setInterval(drawTree, 500);
+        drawTree(); // 初始绘制一次
     </script>
 </body>
 </html>
