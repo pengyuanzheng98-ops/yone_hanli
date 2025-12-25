@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣诞快乐</title>
+    <style>
+        body { background-color: #000; color: #0f0; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #tree { white-space: pre; line-height: 1.2; text-shadow: 0 0 5px #0f0; }
+        .star { color: #ff0; text-shadow: 0 0 10px #ff0; }
+        .ornament { color: #f00; }
+        h1 { font-size: 1.5rem; margin-top: 20px; color: #fff; text-shadow: 0 0 10px #f00; }
+    </style>
+</head>
+<body>
+    <div id="tree"></div>
+    <h1>Merry Christmas!</h1>
+
+    <script>
+        function createTree() {
+            const height = 15;
+            let treeStr = '<span class="star">★</span>\n';
+            for (let i = 1; i < height; i++) {
+                let line = "";
+                for (let j = 0; j < height - i; j++) line += " ";
+                for (let k = 0; k < (2 * i - 1); k++) {
+                    if (Math.random() > 0.9) {
+                        line += '<span class="ornament">o</span>';
+                    } else {
+                        line += "*";
+                    }
+                }
+                treeStr += line + "\n";
+            }
+            // 树干
+            for (let i = 0; i < 2; i++) {
+                let trunk = "";
+                for (let j = 0; j < height - 2; j++) trunk += " ";
+                treeStr += "|||\n";
+            }
+            document.getElementById('tree').innerHTML = treeStr;
+        }
+
+        // 动态闪烁效果
+        setInterval(createTree, 500);
+        createTree();
+    </script>
+</body>
+</html>
